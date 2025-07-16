@@ -7,7 +7,7 @@ This project features real-time messaging, live code sharing, **HTML/CSS/JS code
 ## ✨ Features
 
 - 💬 **Real-time Chat:** Collaborators can chat live via WebSockets (Socket.io).
-- 🤖 **AI Assistant:** Mention `@ai` in your message to get a response from the AI (OpenAI-powered).
+- 🤖 **AI Assistant:** Mention `@ai` in your message to get a response from the AI.
 - 🔐 **JWT-based Authentication:** Secure login and token-based session handling.
 - 👨‍💻 **Live Code Preview:** Write, preview, and **edit** HTML/CSS/JavaScript code in real-time.
 - 💡 **AI Code Generator:** AI can generate HTML, CSS, and JS code when prompted, which you can immediately preview and modify.
