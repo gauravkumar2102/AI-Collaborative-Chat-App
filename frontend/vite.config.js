@@ -9,11 +9,12 @@ export default defineConfig({
     tailwindcss(),
   ],
   server: {
-  headers: {
-    'Cross-Origin-Embedder-Policy': 'require-corp',
-    'Cross-Origin-Opener-Policy': 'same-origin'
-  }
-}, build: {
-    outDir: 'dist' 
+    headers: {
+      'Cross-Origin-Embedder-Policy': 'require-corp',
+      'Cross-Origin-Opener-Policy': 'same-origin'
+    }
+  },
+  build: {
+    outDir: 'dist'  
   }
 })
