@@ -10,6 +10,7 @@ import axios from '../config/axios';
 const Navbar = () => {
 const [isOpen, setIsOpen] = useState(false);
 const { user: loginUser } = useContext(UserContext);
+console.log("User:", loginUser);
 const navigate=useNavigate();
   return (
     <nav className="shadow-md">

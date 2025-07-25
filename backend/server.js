@@ -8,21 +8,13 @@ import mongoose from 'mongoose';
 import projectmodel from './models/project.models.js';
 import * as AiService from './service/ai.service.js';
 import fs from 'fs';
-import path from "path";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-app.use(express.static(path.join(__dirname, '../frontend/dist')));
-
-app.get("*", (req, res) => {
-  const filePath = path.join(__dirname, '../frontend/dist', 'index.html');
-  if (fs.existsSync(filePath)) {
-    res.sendFile(filePath);
-  } else {
-    res.status(500).send("Frontend build not found");
-  }
+ 
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
 });
+
 
 const server=http.createServer(app);
 const io = new Server(server,
@@ -33,25 +25,7 @@ const io = new Server(server,
   }
 );
 // MiddleWare
-<<<<<<< HEAD
-=======
 
->>>>>>> d26c97bdefbb4a1f1767b020fd2807b63bbb4c7a
-app.use((req, res, next) => {
-  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
-  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
-  next();
-});
-
-<<<<<<< HEAD
-app.use(express.static(path.join(__dirname, 'client/dist')));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
-});
-
-
-=======
->>>>>>> d26c97bdefbb4a1f1767b020fd2807b63bbb4c7a
 
 io.use(async(socket, next) => {
   try { 

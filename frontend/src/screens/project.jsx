@@ -39,13 +39,7 @@ const OpenProject = () => {
   const [isNPM, setIsNPM] = useState("");
   // To toggle the check icon
 
-    function sanitizeAiJson(raw) {
-  return raw
-    .replace(/^```json|```$/g, "")                       // Remove markdown ```json
-    .replace(/[\u200B-\u200D\uFEFF]/g, "")               // Remove invisible Unicode
-    .replace(/`/g, "\\`")                                // Optional: only if used in templates
-    .trim();
-}
+  
 
 
   useEffect(() => {
