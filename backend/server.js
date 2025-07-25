@@ -1,6 +1,5 @@
 import 'dotenv/config.js';
 import { Server } from "socket.io";
-import path from "path"
 import express from 'express';     
 import http from 'http';
 import app from './app.js';
@@ -9,6 +8,17 @@ import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import projectmodel from './models/project.models.js';
 import * as AiService from './service/ai.service.js';
+
+import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+app.use(express.static(path.join(__dirname, 'client/dist')));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+});
 
 const server=http.createServer(app);
 const io = new Server(server,
