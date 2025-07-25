@@ -22,6 +22,7 @@ app.use(cors({
  app.use(express.urlencoded({ extended: true })); 
  app.use(cookieParser());
  
+
  app.use("/user", userRoutes);
  app.use("/project",projectRoutes);
  app.use("/ai", aiRoutes);
