@@ -1,5 +1,7 @@
 import 'dotenv/config.js';
 import { Server } from "socket.io";
+const path = require("path");
+
 import http from 'http';
 import app from './app.js';
 import jwt from 'jsonwebtoken';
@@ -15,7 +17,19 @@ const io = new Server(server,
   }
 );
 // MiddleWare
- 
+
+app.use((req, res, next) => {
+  res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
+  res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  next();
+});
+
+app.use(express.static(path.join(__dirname, 'client/dist')));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+});
+
+
 io.use(async(socket, next) => {
   try { 
       const token = socket.handshake.auth?.token || socket.handshake.headers.authorization?.split(' ')[1];
