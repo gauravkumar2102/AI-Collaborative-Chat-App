@@ -9,8 +9,7 @@ import mongoose from 'mongoose';
 import { fileURLToPath } from 'url';
 import projectmodel from './models/project.models.js';
 import * as AiService from './service/ai.service.js';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+
 const server=http.createServer(app);
 const io = new Server(server,
   {
@@ -25,11 +24,6 @@ app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
-});
-
-app.use(express.static(path.join(__dirname, 'client/dist')));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
 });
 
 
