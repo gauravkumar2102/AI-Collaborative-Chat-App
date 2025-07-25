@@ -1,6 +1,6 @@
 import 'dotenv/config.js';
 import { Server } from "socket.io";
-const path = require("path");
+import path from "path"
 
 import http from 'http';
 import app from './app.js';
