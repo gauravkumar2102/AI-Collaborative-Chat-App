@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
 import projectmodel from './models/project.models.js';
 import * as AiService from './service/ai.service.js';
-
+import fs from 'fs';
 import path from "path";
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
@@ -16,7 +16,12 @@ const __dirname = dirname(__filename);
 app.use(express.static(path.join(__dirname, 'client/dist')));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+  const filePath = path.join(__dirname, 'client/dist', 'index.html');
+  if (fs.existsSync(filePath)) {
+    res.sendFile(filePath);
+  } else {
+    res.status(500).send("Frontend build not found");
+  }
 });
 
 const server=http.createServer(app);
