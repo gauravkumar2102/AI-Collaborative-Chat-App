@@ -38,6 +38,16 @@ const OpenProject = () => {
   const [serverReadySet, setServerReadySet] = useState(false);
   const [isNPM, setIsNPM] = useState("");
   // To toggle the check icon
+
+    function sanitizeAiJson(raw) {
+  return raw
+    .replace(/^```json|```$/g, "")                       // Remove markdown ```json
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")               // Remove invisible Unicode
+    .replace(/`/g, "\\`")                                // Optional: only if used in templates
+    .trim();
+}
+
+
   useEffect(() => {
     InitialiseSocket(project._id);
 
@@ -55,11 +65,14 @@ const OpenProject = () => {
     recieveMessage("project-message", (data) => {
       
       if (data.sender._id === "ai") {
+
+       
         const text = data.message.replace(/^```json|```$/g, "").trim();
-        const text2 = text.replace(/[\u200B-\u200D\uFEFF]/g, "");
+        const cleanJson = text.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+        const text2 = cleanJson.replace(/[\u200B-\u200D\uFEFF]/g, "");
 
         const aiMessage = JSON.parse(text2);
-        // console.log("AI recieved Message:", aiMessage);
+        console.log("Sucessfully parsed:", aiMessage);
         if (aiMessage.buildCommand) {
           setIsNPM(aiMessage.buildCommand.mainItem);
         }
@@ -210,8 +223,9 @@ const OpenProject = () => {
     console.log("AI message::", typeof message);
     if (typeof message === "string") {
       try {
-        const text = message.replace(/^```json|```$/g, "").trim();
-        const text2 = text.replace(/[\u200B-\u200D\uFEFF]/g, "");
+         const text = message.replace(/^```json|```$/g, "").trim();
+        const cleanJson = text.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
+        const text2 = cleanJson.replace(/[\u200B-\u200D\uFEFF]/g, "");
         messageObject = JSON.parse(text2);
       } catch (error) {
         messageObject = message;

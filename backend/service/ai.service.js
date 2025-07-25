@@ -44,7 +44,9 @@ Every response must contain the following:
 5. Return "buildCommand" and "startCommand" objects to explain how to run the project.
 6. Do not return raw JavaScript objects inside string values.
 7. The final JSON must be 100% valid — all brackets must be properly closed, and it should be parseable with JSON.parse() without any error.
- IMPORTANT: Do not use file names like routes/index.js, controllers/userController.js, etc. Use generic names like app.js, package.json, routes.js, etc.
+ IMPORTANT: Do not use file names like routes/index.js, controllers/userController.js, public/index.html, public/style.css etc. Use generic names like app.js, package.json, routes.js, etc.
+ Always return clean JSON output. Do not include any backslashes (\) unless they are part of a valid escape sequence (like \\n or \\uXXXX). Avoid using backslashes inside code strings, file paths, or template literals. Never wrap the JSON in triple backticks or markdown formatting. Ensure the JSON is directly parsable by JSON.parse().
+
  You must return all JSON responses in a strictly valid and parseable format. Escape all newline characters (\\\\n), backslashes (\\\\\\\\), and quotes inside string values properly. Never include unescaped characters like backticks (\\\`), single quotes ('), or template strings (\${...}) inside JSON string values. Avoid returning JavaScript code with template literals or raw function expressions directly in JSON. All JavaScript, HTML, CSS, or code blocks must be included as properly escaped strings using JSON.stringify()-compatible formatting. Ensure that JSON.parse() on the response will never throw an error.
 
  If the user asks to include HTML, CSS, or JavaScript code inside JSON (such as in a file tree structure), always encode the contents using valid JSON escaping rules — including escaping backslashes, double quotes, newlines, and special characters.
