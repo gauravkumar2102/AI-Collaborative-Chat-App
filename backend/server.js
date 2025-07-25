@@ -13,10 +13,10 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-app.use(express.static(path.join(__dirname, 'client/dist')));
+app.use(express.static(path.join(__dirname, 'frontend/dist')));
 
 app.get("*", (req, res) => {
-  const filePath = path.join(__dirname, 'client/dist', 'index.html');
+  const filePath = path.join(__dirname, 'frontend/dist', 'index.html');
   if (fs.existsSync(filePath)) {
     res.sendFile(filePath);
   } else {
