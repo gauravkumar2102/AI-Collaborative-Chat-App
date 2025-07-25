@@ -33,25 +33,13 @@ const io = new Server(server,
   }
 );
 // MiddleWare
-<<<<<<< HEAD
-=======
 
->>>>>>> d26c97bdefbb4a1f1767b020fd2807b63bbb4c7a
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
 
-<<<<<<< HEAD
-app.use(express.static(path.join(__dirname, 'client/dist')));
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
-});
-
-
-=======
->>>>>>> d26c97bdefbb4a1f1767b020fd2807b63bbb4c7a
 
 io.use(async(socket, next) => {
   try { 

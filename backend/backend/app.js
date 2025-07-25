@@ -21,11 +21,7 @@ app.use(cors({
  app.use(express.json());
  app.use(express.urlencoded({ extended: true })); 
  app.use(cookieParser());
-<<<<<<< HEAD
- 
-=======
 
->>>>>>> d26c97bdefbb4a1f1767b020fd2807b63bbb4c7a
 
  app.use("/user", userRoutes);
  app.use("/project",projectRoutes);
