@@ -27,13 +27,7 @@ app.use(cors({
   next();
 });
 
-// Serve the built frontend (from Vite)
-app.use(express.static(path.join(__dirname, 'client/dist')));
 
-// React routing fallback
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
-});
  app.use("/user", userRoutes);
  app.use("/project",projectRoutes);
  app.use("/ai", aiRoutes);
