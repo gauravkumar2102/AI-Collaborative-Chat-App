@@ -6,8 +6,11 @@ import http from 'http';
 import app from './app.js';
 import jwt from 'jsonwebtoken';
 import mongoose from 'mongoose';
+import { fileURLToPath } from 'url';
 import projectmodel from './models/project.models.js';
 import * as AiService from './service/ai.service.js';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const server=http.createServer(app);
 const io = new Server(server,
   {
