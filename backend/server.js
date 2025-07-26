@@ -12,6 +12,7 @@ import fs from 'fs';
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
+  console.log("Headers set for", req.url);
   next();
 });
 
