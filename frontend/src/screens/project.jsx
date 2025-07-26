@@ -46,10 +46,13 @@ const OpenProject = () => {
     InitialiseSocket(project._id);
 
     const initWebContainer = async () => {
-      if (!webContainer) {
+     try{
         const container = await getWebContainer();
         setWebContainer(container);
         console.log(" WebContainer started");
+      }
+      catch(e){
+          console.log(e.message);
       }
     };
 
