@@ -8,7 +8,7 @@ export const getWebContainer = async () => {
         webContainerInstance = await WebContainer.boot(
             {
                 experimental: {
-                 permittedPorts: [3000], 
+                 permittedPorts: [8080], 
                  },
             });
     }
