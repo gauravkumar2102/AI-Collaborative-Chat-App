@@ -14,7 +14,7 @@
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "https://ai-collaborative-chat-app.onrender.com/api/$1"
+      "destination": "https://ai-collaborative-chat-app.onrender.com/$1"
     }
   ]
 }
