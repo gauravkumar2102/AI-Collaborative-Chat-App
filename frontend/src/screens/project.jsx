@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation,Link } from "react-router-dom";
 import axios from "../config/axios";
 import { UserContext } from "../context/user.context.jsx";
 import {
@@ -349,9 +349,9 @@ const OpenProject = () => {
     <main className="h-screen w-screen flex">
       <section className="left  relative flex flex-col h-screen min-w-88 bg-slate-100">
         <header className="flex justify-between items-center bg-gray-800  w-full h-14 text-white absolute z-5 top-0 head-pro">
-          <a href="http:/project">
-            <i className="ri-arrow-left-s-line text-2xl ml-4"></i>
-          </a>
+          <Link to="/project">
+  <i className="ri-arrow-left-s-line text-2xl ml-4"></i>
+</Link>
           <button
             onClick={() => setIsModalOpen(true)}
             className="colaborator-button flex items-center gap-2 transition duration-300 rounded-full"
