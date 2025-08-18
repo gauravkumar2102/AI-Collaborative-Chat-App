@@ -1,7 +1,8 @@
 # 🤖 AI Collaborative Chat App
 
 A real-time collaborative chat application where users can communicate with each other **and with AI** in the same chat room. Just mention `@ai` in your message, and the built-in AI assistant will respond!  
-This project features real-time messaging, live code sharing, **HTML/CSS/JS code preview**, and a **shared Express.js server runtime** — all secured with **JWT authentication**.
+This project features real-time messaging, live code sharing, **HTML/CSS/JS code preview**, and a **shared Express.js server runtime** — all secured with **JWT authentication**. 
+LIVE LINK - https://ai-collaborative-chat-app.vercel.app
 
 
 ## ✨ Features
