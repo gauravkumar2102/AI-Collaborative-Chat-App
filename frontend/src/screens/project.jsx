@@ -46,11 +46,13 @@ const OpenProject = () => {
     InitialiseSocket(project._id);
 
     const initWebContainer = async () => {
-       if (!webContainer) {
+
+       if (webContainer===null) {
         const container = await getWebContainer();
         setWebContainer(container);
         console.log(" WebContainer started");
       }
+
     };
 
     initWebContainer();
@@ -212,7 +214,7 @@ const OpenProject = () => {
 
     let htmlContent = fileTree["index.html"].file.contents;
 
-    // Inject CSS
+    
     const cssLinks = Object.keys(fileTree)
       .filter(f => f.endsWith(".css"))
       .map(f => {

@@ -9,7 +9,7 @@ import axios from '../config/axios';
  
 const Navbar = () => {
 const [isOpen, setIsOpen] = useState(false);
-const { user: loginUser } = useContext(UserContext);
+const { user: loginUser ,setUser} = useContext(UserContext);
 console.log("User:", loginUser);
 const navigate=useNavigate();
   return (
@@ -36,7 +36,7 @@ const navigate=useNavigate();
     });
                  localStorage.removeItem("token");
                  localStorage.removeItem("user");
-
+                 setUser(null);
                 navigate("/");
 
   } catch (err) {

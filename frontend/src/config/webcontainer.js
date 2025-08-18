@@ -4,7 +4,7 @@ let webContainerInstance = null;
 
 export const getWebContainer = async () => {
 
-  if (!webContainerInstance) {
+  if (webContainerInstance===null) {
     webContainerInstance = await WebContainer.boot({
       experimental: {
         permittedPorts: [3000], // allow exposing port 3000
