@@ -20,7 +20,7 @@ const server=http.createServer(app);
 const io = new Server(server,
   {
     cors:{
-      origin: "*", // Allow all origins (you can specify a specific origin if needed)
+      origin: "*", 
     }
   }
 );
@@ -88,7 +88,7 @@ io.use(async(socket, next) => {
     });
 
 })  
-
+ 
 server.listen(process.env.PORT || 3000, () => {
   console.log(`Server is running on port ${process.env.PORT || 3000}`);
 });    

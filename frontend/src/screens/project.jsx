@@ -46,7 +46,7 @@ const OpenProject = () => {
     InitialiseSocket(project._id);
 
     const initWebContainer = async () => {
-      if (!webContainer) {
+       if (!webContainer) {
         const container = await getWebContainer();
         setWebContainer(container);
         console.log(" WebContainer started");
@@ -84,7 +84,7 @@ const OpenProject = () => {
       scrollToBottom();
     });
     // member of project
-    axios.get(`/project/getProject/${project._id}`).then((res) => {
+      axios.get(`/project/getProject/${project._id}`).then((res) => {
       setProjectMembers(res.data.users);
     });
 
@@ -116,79 +116,137 @@ const OpenProject = () => {
 
   //  HTML PREVIEW
   const previewRef = useRef();
-  async function Preview(fileTree) {
-    try {
-      if (!webContainer) {
-        console.error("WebContainer not initialized");
-        return;
-      }
+  // async function Preview(fileTree) {
+  //   try {
+  //     if (!webContainer) {
+  //       console.error("WebContainer not initialized");
+  //       return;
+  //     }
 
-      if (runProcess) {
-        runProcess.kill();
-      }
+  //     if (runProcess) {
+  //       runProcess.kill();
+  //     }
 
-      const mountTree = {};
-      for (const [filename, value] of Object.entries(fileTree)) {
-        if (value && value.file && typeof value.file.contents === "string") {
-          mountTree[filename] = { file: { contents: value.file.contents } };
-        }
-      }
-      await webContainer.mount(mountTree);
+  //     const mountTree = {};
+  //     for (const [filename, value] of Object.entries(fileTree)) {
+  //       if (value && value.file && typeof value.file.contents === "string") {
+  //         mountTree[filename] = { file: { contents: value.file.contents } };
+  //       }
+  //     }
+  //     await webContainer.mount(mountTree);
 
-      if (mountTree["index.html"]) {
-        if (webContainer.url) {
-          setIframeUrl(webContainer.url);
-        } else if (webContainer.getStaticServerUrl) {
-          setIframeUrl(webContainer.getStaticServerUrl());
-        } else {
-          let htmlContent = mountTree["index.html"].file.contents;
+  //     if (mountTree["index.html"]) {
+  //       if (webContainer.url) {
+  //         setIframeUrl(webContainer.url);
+  //       } else if (webContainer.getStaticServerUrl) {
+  //         setIframeUrl(webContainer.getStaticServerUrl());
+  //       } else {
+  //         let htmlContent = mountTree["index.html"].file.contents;
 
-          const cssLinks = Object.keys(mountTree)
-            .filter((f) => f.endsWith(".css"))
-            .map((f) => {
-              const cssBlob = new Blob([mountTree[f].file.contents], {
-                type: "text/css",
-              });
-              const cssUrl = URL.createObjectURL(cssBlob);
-              return `<link rel="stylesheet" type="text/css" href="${cssUrl}">`;
-            })
-            .join("\n");
+  //         const cssLinks = Object.keys(mountTree)
+  //           .filter((f) => f.endsWith(".css"))
+  //           .map((f) => {
+  //             const cssBlob = new Blob([mountTree[f].file.contents], {
+  //               type: "text/css",
+  //             });
+  //             const cssUrl = URL.createObjectURL(cssBlob);
+  //             return `<link rel="stylesheet" type="text/css" href="${cssUrl}">`;
+  //           })
+  //           .join("\n");
 
-          const jsScripts = Object.keys(mountTree)
-            .filter((f) => f.endsWith(".js"))
-            .map((f) => {
-              const jsBlob = new Blob([mountTree[f].file.contents], {
-                type: "text/javascript",
-              });
-              const jsUrl = URL.createObjectURL(jsBlob);
-              return `<script src="${jsUrl}"></script>`;
-            })
-            .join("\n");
+  //         const jsScripts = Object.keys(mountTree)
+  //           .filter((f) => f.endsWith(".js"))
+  //           .map((f) => {
+  //             const jsBlob = new Blob([mountTree[f].file.contents], {
+  //               type: "text/javascript",
+  //             });
+  //             const jsUrl = URL.createObjectURL(jsBlob);
+  //             return `<script src="${jsUrl}"></script>`;
+  //           })
+  //           .join("\n");
 
-          htmlContent = htmlContent.replace(/<head>/i, `<head>\n${cssLinks}`);
-          if (/<\/body>/i.test(htmlContent)) {
-            htmlContent = htmlContent.replace(
-              /<\/body>/i,
-              `${jsScripts}\n</body>`
-            );
-          } else {
-            htmlContent += jsScripts;
-          }
+  //         htmlContent = htmlContent.replace(/<head>/i, `<head>\n${cssLinks}`);
+  //         if (/<\/body>/i.test(htmlContent)) {
+  //           htmlContent = htmlContent.replace(
+  //             /<\/body>/i,
+  //             `${jsScripts}\n</body>`
+  //           );
+  //         } else {
+  //           htmlContent += jsScripts;
+  //         }
 
-          const blob = new Blob([htmlContent], { type: "text/html" });
-          const blobUrl = URL.createObjectURL(blob);
-          setIframeUrl(blobUrl);
-          console.warn(
-            "No preview URL method found on webContainer, using Blob URL fallback with CSS/JS"
-          );
-        }
-      } else {
-        console.warn("No index.html found in fileTree for preview.");
-      }
-    } catch (error) {
-      console.error("Error previewing static files:", error);
+  //         const blob = new Blob([htmlContent], { type: "text/html" });
+  //         const blobUrl = URL.createObjectURL(blob);
+  //         setIframeUrl(blobUrl);
+  //         console.warn(
+  //           "No preview URL method found on webContainer, using Blob URL fallback with CSS/JS"
+  //         );
+  //       }
+  //     } else {
+  //       console.warn("No index.html found in fileTree for preview.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error previewing static files:", error);
+  //   }
+  // }
+
+
+
+
+
+
+
+  //  ************************************************
+  
+  
+
+
+  // *****************************************************
+  
+   async function Preview(fileTree) {
+  try {
+    if (!fileTree["index.html"]) {
+      console.warn("No index.html found.");
+      return;
     }
+
+    let htmlContent = fileTree["index.html"].file.contents;
+
+    // Inject CSS
+    const cssLinks = Object.keys(fileTree)
+      .filter(f => f.endsWith(".css"))
+      .map(f => {
+        const cssBlob = new Blob([fileTree[f].file.contents], { type: "text/css" });
+        const cssUrl = URL.createObjectURL(cssBlob);
+        return `<link rel="stylesheet" href="${cssUrl}">`;
+      })
+      .join("\n");
+
+    // Inject JS
+    const jsScripts = Object.keys(fileTree)
+      .filter(f => f.endsWith(".js"))
+      .map(f => {
+        const jsBlob = new Blob([fileTree[f].file.contents], { type: "text/javascript" });
+        const jsUrl = URL.createObjectURL(jsBlob);
+        return `<script src="${jsUrl}"></script>`;
+      })
+      .join("\n");
+
+    htmlContent = htmlContent.replace(/<head>/i, `<head>\n${cssLinks}`);
+    htmlContent = htmlContent.replace(/<\/body>/i, `${jsScripts}\n</body>`);
+
+    const blob = new Blob([htmlContent], { type: "text/html" });
+    const blobUrl = URL.createObjectURL(blob);
+
+    setIframeUrl(blobUrl);
+  } catch (err) {
+    console.error("Preview error:", err);
   }
+}
+
+
+  // *******************************************************************8
+
   // send message to project
   function sendMessageToProject() {
     sendingMessage("project-message", {

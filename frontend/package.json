@@ -12,6 +12,7 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.10",
     "@webcontainer/api": "^1.6.1",
+    "@webcontainer/env": "^1.1.1",
     "axios": "^1.10.0",
     "cors": "^2.8.5",
     "highlight.js": "^11.11.1",

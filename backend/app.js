@@ -14,7 +14,7 @@ const app=express()
 app.use(morgan('dev'));
 
 app.use(cors({
-  origin: 'https://ai-collaborative-chat-app-1.onrender.com',
+  origin: 'http://localhost:5173',
   credentials: true, 
   allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
