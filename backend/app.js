@@ -14,7 +14,7 @@ const app=express()
 app.use(morgan('dev'));
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: "https://ai-collaborative-chat-app.vercel.app",
   credentials: true, 
   allowedHeaders: ['Content-Type', 'Authorization'], 
 }));
