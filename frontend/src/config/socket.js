@@ -8,7 +8,7 @@ export const InitialiseSocket=(projectid)=>{
         auth: {
             token: localStorage.getItem('token') 
         },
-        query: {   
+        query: {    
             projectid: projectid 
         }
 

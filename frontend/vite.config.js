@@ -13,6 +13,10 @@ export default defineConfig({
       'Cross-Origin-Embedder-Policy': 'require-corp',
       'Cross-Origin-Opener-Policy': 'same-origin'
     }
+    ,
+     proxy: {
+      "/user": "http://localhost:8080"
+    }
   },
   build: {
     outDir: 'dist'  

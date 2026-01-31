@@ -9,6 +9,9 @@ import {
 } from "../config/socket";
 import Markdown from "markdown-to-jsx";
 import hljs from "highlight.js";
+import JSZip from "jszip";
+import { saveAs } from "file-saver";
+
 // import 'highlight.js/styles/github.css';
 import "highlight.js/styles/atom-one-dark.css"; // or any other theme
 window.hljs = hljs; //
@@ -39,7 +42,7 @@ const OpenProject = () => {
   const [isNPM, setIsNPM] = useState("");
   // To toggle the check icon
 
-  
+
 
 
   useEffect(() => {
@@ -47,7 +50,7 @@ const OpenProject = () => {
 
     const initWebContainer = async () => {
 
-       if (webContainer===null) {
+      if (webContainer === null) {
         const container = await getWebContainer();
         setWebContainer(container);
         console.log(" WebContainer started");
@@ -59,16 +62,17 @@ const OpenProject = () => {
     // -----------------------------------------------------
 
     recieveMessage("project-message", (data) => {
-      
+
       if (data.sender._id === "ai") {
 
-       
+
         const text = data.message.replace(/^```json|```$/g, "").trim();
         const cleanJson = text.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
         const text2 = cleanJson.replace(/[\u200B-\u200D\uFEFF]/g, "");
+        //  text2=text2.trim();
 
         const aiMessage = JSON.parse(text2);
-        console.log("Sucessfully parsed:", aiMessage);
+        // console.log("Sucessfully parsed:", aiMessage);
         if (aiMessage.buildCommand) {
           setIsNPM(aiMessage.buildCommand.mainItem);
         }
@@ -86,7 +90,7 @@ const OpenProject = () => {
       scrollToBottom();
     });
     // member of project
-      axios.get(`/project/getProject/${project._id}`).then((res) => {
+    axios.get(`/project/getProject/${project._id}`).then((res) => {
       setProjectMembers(res.data.users);
     });
 
@@ -108,8 +112,7 @@ const OpenProject = () => {
       if (ref.current && props.className?.includes("lang-") && window.hljs) {
         window.hljs.highlightElement(ref.current);
 
-        // hljs won't reprocess the element unless this attribute is removed
-        // ref.current.removeAttribute('data-highlighted')
+
       }
     }, [props.className, props.children]);
 
@@ -118,133 +121,86 @@ const OpenProject = () => {
 
   //  HTML PREVIEW
   const previewRef = useRef();
-  // async function Preview(fileTree) {
-  //   try {
-  //     if (!webContainer) {
-  //       console.error("WebContainer not initialized");
-  //       return;
-  //     }
-
-  //     if (runProcess) {
-  //       runProcess.kill();
-  //     }
-
-  //     const mountTree = {};
-  //     for (const [filename, value] of Object.entries(fileTree)) {
-  //       if (value && value.file && typeof value.file.contents === "string") {
-  //         mountTree[filename] = { file: { contents: value.file.contents } };
-  //       }
-  //     }
-  //     await webContainer.mount(mountTree);
-
-  //     if (mountTree["index.html"]) {
-  //       if (webContainer.url) {
-  //         setIframeUrl(webContainer.url);
-  //       } else if (webContainer.getStaticServerUrl) {
-  //         setIframeUrl(webContainer.getStaticServerUrl());
-  //       } else {
-  //         let htmlContent = mountTree["index.html"].file.contents;
-
-  //         const cssLinks = Object.keys(mountTree)
-  //           .filter((f) => f.endsWith(".css"))
-  //           .map((f) => {
-  //             const cssBlob = new Blob([mountTree[f].file.contents], {
-  //               type: "text/css",
-  //             });
-  //             const cssUrl = URL.createObjectURL(cssBlob);
-  //             return `<link rel="stylesheet" type="text/css" href="${cssUrl}">`;
-  //           })
-  //           .join("\n");
-
-  //         const jsScripts = Object.keys(mountTree)
-  //           .filter((f) => f.endsWith(".js"))
-  //           .map((f) => {
-  //             const jsBlob = new Blob([mountTree[f].file.contents], {
-  //               type: "text/javascript",
-  //             });
-  //             const jsUrl = URL.createObjectURL(jsBlob);
-  //             return `<script src="${jsUrl}"></script>`;
-  //           })
-  //           .join("\n");
-
-  //         htmlContent = htmlContent.replace(/<head>/i, `<head>\n${cssLinks}`);
-  //         if (/<\/body>/i.test(htmlContent)) {
-  //           htmlContent = htmlContent.replace(
-  //             /<\/body>/i,
-  //             `${jsScripts}\n</body>`
-  //           );
-  //         } else {
-  //           htmlContent += jsScripts;
-  //         }
-
-  //         const blob = new Blob([htmlContent], { type: "text/html" });
-  //         const blobUrl = URL.createObjectURL(blob);
-  //         setIframeUrl(blobUrl);
-  //         console.warn(
-  //           "No preview URL method found on webContainer, using Blob URL fallback with CSS/JS"
-  //         );
-  //       }
-  //     } else {
-  //       console.warn("No index.html found in fileTree for preview.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error previewing static files:", error);
-  //   }
-  // }
-
-
-
-
 
 
 
   //  ************************************************
-  
-  
+  const downloadProject = async () => {
+    try {
+      if (!fileTree || typeof fileTree !== "object") {
+        alert("No project files found");
+        return;
+      }
+
+      const zip = new JSZip();
+      let fileCount = 0;
+
+      for (const [key, value] of Object.entries(fileTree)) {
+        // Only include real files
+        if (value && value.file && typeof value.file.contents === "string") {
+          zip.file(key, value.file.contents);
+          fileCount++;
+        }
+      }
+
+      if (fileCount === 0) {
+        alert("No files to download");
+        return;
+      }
+
+      const blob = await zip.generateAsync({ type: "blob" });
+      saveAs(blob, `${project?.name || "project"}.zip`);
+    } catch (err) {
+      console.error("Download error:", err);
+      alert("Failed to download project");
+    }
+  };
+
+
 
 
   // *****************************************************
-  
-   async function Preview(fileTree) {
-  try {
-    if (!fileTree["index.html"]) {
-      console.warn("No index.html found.");
-      return;
+
+  async function Preview(fileTree) {
+    try {
+      if (!fileTree["index.html"]) {
+        console.warn("No index.html found.");
+        return;
+      }
+
+      let htmlContent = fileTree["index.html"].file.contents;
+
+
+      const cssLinks = Object.keys(fileTree)
+        .filter(f => f.endsWith(".css"))
+        .map(f => {
+          const cssBlob = new Blob([fileTree[f].file.contents], { type: "text/css" });
+          const cssUrl = URL.createObjectURL(cssBlob);
+          return `<link rel="stylesheet" href="${cssUrl}">`;
+        })
+        .join("\n");
+
+      // Inject JS
+      const jsScripts = Object.keys(fileTree)
+        .filter(f => f.endsWith(".js"))
+        .map(f => {
+          const jsBlob = new Blob([fileTree[f].file.contents], { type: "text/javascript" });
+          const jsUrl = URL.createObjectURL(jsBlob);
+          return `<script src="${jsUrl}"></script>`;
+        })
+        .join("\n");
+
+      htmlContent = htmlContent.replace(/<head>/i, `<head>\n${cssLinks}`);
+      htmlContent = htmlContent.replace(/<\/body>/i, `${jsScripts}\n</body>`);
+
+      const blob = new Blob([htmlContent], { type: "text/html" });
+      const blobUrl = URL.createObjectURL(blob);
+
+      setIframeUrl(blobUrl);
+    } catch (err) {
+      console.error("Preview error:", err);
     }
-
-    let htmlContent = fileTree["index.html"].file.contents;
-
-    
-    const cssLinks = Object.keys(fileTree)
-      .filter(f => f.endsWith(".css"))
-      .map(f => {
-        const cssBlob = new Blob([fileTree[f].file.contents], { type: "text/css" });
-        const cssUrl = URL.createObjectURL(cssBlob);
-        return `<link rel="stylesheet" href="${cssUrl}">`;
-      })
-      .join("\n");
-
-    // Inject JS
-    const jsScripts = Object.keys(fileTree)
-      .filter(f => f.endsWith(".js"))
-      .map(f => {
-        const jsBlob = new Blob([fileTree[f].file.contents], { type: "text/javascript" });
-        const jsUrl = URL.createObjectURL(jsBlob);
-        return `<script src="${jsUrl}"></script>`;
-      })
-      .join("\n");
-
-    htmlContent = htmlContent.replace(/<head>/i, `<head>\n${cssLinks}`);
-    htmlContent = htmlContent.replace(/<\/body>/i, `${jsScripts}\n</body>`);
-
-    const blob = new Blob([htmlContent], { type: "text/html" });
-    const blobUrl = URL.createObjectURL(blob);
-
-    setIframeUrl(blobUrl);
-  } catch (err) {
-    console.error("Preview error:", err);
   }
-}
 
 
   // *******************************************************************8
@@ -277,7 +233,7 @@ const OpenProject = () => {
     console.log("AI message::", typeof message);
     if (typeof message === "string") {
       try {
-         const text = message.replace(/^```json|```$/g, "").trim();
+        const text = message.replace(/^```json|```$/g, "").trim();
         const cleanJson = text.replace(/\\(?!["\\/bfnrtu])/g, '\\\\');
         const text2 = cleanJson.replace(/[\u200B-\u200D\uFEFF]/g, "");
         messageObject = JSON.parse(text2);
@@ -350,8 +306,8 @@ const OpenProject = () => {
       <section className="left  relative flex flex-col h-screen min-w-88 bg-slate-100">
         <header className="flex justify-between items-center bg-gray-800  w-full h-14 text-white absolute z-5 top-0 head-pro">
           <Link to="/project">
-  <i className="ri-arrow-left-s-line text-2xl ml-4"></i>
-</Link>
+            <i className="ri-arrow-left-s-line text-2xl ml-4"></i>
+          </Link>
           <button
             onClick={() => setIsModalOpen(true)}
             className="colaborator-button flex items-center gap-2 transition duration-300 rounded-full"
@@ -376,13 +332,11 @@ const OpenProject = () => {
             {Messages.map((msg, index) => (
               <div
                 key={index}
-                className={`flex flex-col mt-4 px-4 bg-gray-200 rounded-md max-w-60 w-fit ${
-                  msg.sender._id === "ai" ? "max-w-75 ai-box" : "max-w-52"
-                } ${
-                  msg.sender._id === loginUser._id.toString()
+                className={`flex flex-col mt-4 px-4 bg-gray-200 rounded-md max-w-60 w-fit ${msg.sender._id === "ai" ? "max-w-75 ai-box" : "max-w-52"
+                  } ${msg.sender._id === loginUser._id.toString()
                     ? "ml-auto outgoing"
                     : "incoming"
-                }  message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}
+                  }  message flex flex-col p-2 bg-slate-50 w-fit rounded-md`}
               >
                 <small className="text-xs opacity-65">{msg.sender.email}</small>
                 {/* <p className="text-xs">${msg.message}</p> */}
@@ -422,9 +376,8 @@ const OpenProject = () => {
 
         {/* sidepanel */}
         <div
-          className={`sidePanel w-full h-full flex flex-col gap-2 bg-red-50 absolute transition-all bg-slate-100 z-10 ${
-            isSidePanelOpen ? "translate-x-0" : "-translate-x-full"
-          } top-0`}
+          className={`sidePanel w-full h-full flex flex-col gap-2 bg-red-50 absolute transition-all bg-slate-100 z-10 ${isSidePanelOpen ? "translate-x-0" : "-translate-x-full"
+            } top-0`}
         >
           <header className="flex justify-between items-center  bg-slate-200 side-header">
             <h4>Collaborator</h4>
@@ -491,9 +444,8 @@ const OpenProject = () => {
                     setcurrentfile(file);
                   }}
                   key={index}
-                  className={`open-file cursor-pointer min-w-32  flex items-center  w-fit gap-2  transition duration-300  ${
-                    currentfile === file ? "dark-header" : "light-header"
-                  }`}
+                  className={`open-file cursor-pointer min-w-32  flex items-center  w-fit gap-2  transition duration-300  ${currentfile === file ? "dark-header" : "light-header"
+                    }`}
                 >
                   <p className="file-name font-semibold text-lg ">{file}</p>
                 </button>
@@ -501,8 +453,19 @@ const OpenProject = () => {
             </div>
 
             <div className="actions flex gap-2">
-              {isNPM == "None" && (
+              {/* download */}
+
+              <button
+                onClick={downloadProject}
+                className="run-button bg-green-700 text-white rounded hover:bg-green-800 cursor-pointer transition duration-300"
+              >
+                Download
+              </button>
+
+
+              {(isNPM == "none" || isNPM == "browser") && (
                 <div className="preview">
+
                   <button
                     onClick={() => {
                       Preview(fileTree);
@@ -679,11 +642,10 @@ const OpenProject = () => {
               {userList.map((user) => (
                 <div
                   key={user._id}
-                  className={`flex items-center gap-3 p-3 rounded cursor-pointer mb-2 transition ${
-                    selectedUserIds.includes(user._id)
+                  className={`flex items-center gap-3 p-3 rounded cursor-pointer mb-2 transition ${selectedUserIds.includes(user._id)
                       ? "bg-blue-100 border border-blue-400"
                       : "hover:bg-gray-100"
-                  }`}
+                    }`}
                   onClick={() => handleUserClick(user._id)}
                 >
                   <div className="bg-slate-600 text-white rounded-full w-8 h-8 flex items-center justify-center">

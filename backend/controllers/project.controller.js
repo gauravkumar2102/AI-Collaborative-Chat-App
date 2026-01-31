@@ -23,6 +23,7 @@ export const GetAllProjectController=async (req,res)=>{
     try {
         const userid=req.user.id;
         const projects=await projectService.GetAllProject({userid});
+        console.log("my projects", projects);
         res.status(200).json(projects);
     } catch (error) {
         console.log(error);

@@ -38,6 +38,7 @@ export const loginUserController = async (req, res) => {
     const token = await user.generateJWT();
     delete user._doc.password;
     res.status(200).json({ user, token });
+    
   } catch (error) {
     return res.status(400).send(error.message);
   }

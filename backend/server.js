@@ -8,13 +8,25 @@ import mongoose from 'mongoose';
 import projectmodel from './models/project.models.js';
 import * as AiService from './service/ai.service.js';
 import fs from 'fs';
- 
+import redisClient from './service/redis.service.js';  
+
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "same-origin");
   res.setHeader("Cross-Origin-Embedder-Policy", "require-corp");
   next();
 });
 
+const intialzation=()=>{
+     Promise.all([
+        redisClient.connect(),
+     ]).then(()=>{
+        console.log("All Services Connected Successfully");
+     }).catch((err)=>{
+        console.error("Error connecting services:", err);
+        process.exit(1); 
+     }); 
+}
+intialzation();
 
 const server=http.createServer(app);
 const io = new Server(server,

@@ -4,7 +4,7 @@ const genAI = new GoogleGenerativeAI(process.env.GOOGLE_AI_API_KEY);
 
 export const generateResult = async (prompt) => {
   const model = genAI.getGenerativeModel({
-    model: "gemini-1.5-flash",
+    model: "gemini-3-flash-preview",
     generationConfig: {
         responseMimeType: "application/json",
         temperature: 0.4,
@@ -50,6 +50,7 @@ Every response must contain the following:
  You must return all JSON responses in a strictly valid and parseable format. Escape all newline characters (\\\\n), backslashes (\\\\\\\\), and quotes inside string values properly. Never include unescaped characters like backticks (\\\`), single quotes ('), or template strings (\${...}) inside JSON string values. Avoid returning JavaScript code with template literals or raw function expressions directly in JSON. All JavaScript, HTML, CSS, or code blocks must be included as properly escaped strings using JSON.stringify()-compatible formatting. Ensure that JSON.parse() on the response will never throw an error.
 
  If the user asks to include HTML, CSS, or JavaScript code inside JSON (such as in a file tree structure), always encode the contents using valid JSON escaping rules — including escaping backslashes, double quotes, newlines, and special characters.
+ If user asks for only HTML CSS JavaScript code then you don't need to include backend code like express server or package.json file.
 
 Example format:
 

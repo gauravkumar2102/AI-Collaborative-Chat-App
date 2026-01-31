@@ -10,13 +10,13 @@ const Register= () => {
 
   const handleRegister = (e) => {
     e.preventDefault();
-    console.log("hii i am triger");
+    // console.log("hii i am triger");
     
      axios.post('/user/register',{
         email,
         password
      }).then((res)=>{
-         console.log(res.data);
+        //  console.log(res.data);
          navigate("/");
      }).catch((e)=>{
            console.log(e);

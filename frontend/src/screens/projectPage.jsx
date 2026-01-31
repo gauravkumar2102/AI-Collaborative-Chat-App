@@ -18,12 +18,12 @@ const navigate = useNavigate();
 
     function createProject(e) {
         e.preventDefault();
-        console.log("Creating project:", projectName);
+        // console.log("Creating project:", projectName);
         axios.post("/project/create", {
             name: projectName,
         })
         .then((response) => {
-            console.log("Project created:", response.data);
+            // console.log("Project created:", response.data);
             setProject([...project, response.data]);
             setShowModal(false);
 
@@ -35,9 +35,10 @@ const navigate = useNavigate();
       
      useEffect(() => {
         axios.get("/project/all").then((res) => {
-            setProject(res.data);
+            // console.log("Projects fetched:", res.data);
+            setProject(res.data);   
             // console.log("Projects fetched:", res.data.projects);
-
+  
         }).catch(err => {
             console.log(err)
         })
