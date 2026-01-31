@@ -25,6 +25,9 @@ Collaborators can collaboratively write and preview:
 
 ✅ JavaScript
 
+
+https://github.com/user-attachments/assets/309dd016-d420-45cd-aa77-a4ceafac22b3
+
 ✨ AI can generate HTML/CSS/JS code snippets upon request (e.g., @ai make a responsive navbar)
 The generated code is:
 
