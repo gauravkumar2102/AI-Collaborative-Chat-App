@@ -29,11 +29,11 @@ app.use(cors({
  app.get('/', (req, res) => {
      res.send("Hello World!");
  }
+);
+
  app.get("/ping", (req, res) => {
  res.status(200).send("OK");
 });
-
-); 
 
 
 export default app;
