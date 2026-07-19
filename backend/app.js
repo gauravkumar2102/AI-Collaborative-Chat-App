@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 
 import express from 'express';      
 import morgan from 'morgan';
@@ -7,7 +9,7 @@ import projectRoutes from "./routes/project.routes.js"
 import cookieParser from 'cookie-parser';
 import cors from 'cors'
 import aiRoutes from './routes/ai.routes.js';      
-
+  
 connectDB();
 const app=express()
 
@@ -30,6 +32,6 @@ app.use(cors({
      res.send("Hello World!");
  }
 ); 
-
-
+  
+ 
 export default app;
